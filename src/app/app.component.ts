@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-
-import { Product } from './models/product.model';
-
+import { AuthService } from './services/auth.service';
+import { UsersService } from './services/users.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,7 +13,12 @@ export class AppComponent {
 
   showImg = true;
 
-  // urlImagen = '';
+constructor(
+  private authService: AuthService,
+  private usersService: UsersService,
+){
+
+}
 
   widthImg = 10;
   name = 'Bastian';
@@ -30,8 +34,6 @@ export class AppComponent {
     email: '',
     password: '',
   }
-
-
 
   person = {
     name: 'Bastian',

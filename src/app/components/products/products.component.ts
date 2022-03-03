@@ -8,6 +8,10 @@ import { Product, CreateProductDTO, UpdateProductDTO
 
  import { IndicadoresService } from 'src/app/services/indicadores.service';
 
+ import { switchMap, zip } from 'rxjs';
+
+ import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -35,6 +39,7 @@ export class ProductsComponent implements OnInit {
 
   limit = 10;
   offset = 0;
+  statusDetail: 'loading' | 'success' | 'error' | 'init' = 'init';
 
   constructor(
     private storeService: StoreService,
@@ -64,11 +69,36 @@ export class ProductsComponent implements OnInit {
   }
 
   onShowDetail(id: string){
+    this.statusDetail='loading';
+    this.toggleProductDetail();
     this.productsService.getProduct(id)
     .subscribe(data => {
-      console.log('product',data);
-      this.toggleProductDetail();
+      // console.log('product',data);
       this.productChosen = data;
+      this.statusDetail= 'success';
+    }, errorMsg => {
+      this.statusDetail = 'error';
+      Swal.fire({
+        title: "Error",
+        text: errorMsg,
+        icon: 'error',
+        confirmButtonText: 'Cerrar'
+      })
+    })
+  }
+
+  readAndUpdate(id: string){
+    this.productsService.getProduct(id)
+    .pipe(
+      switchMap((product) => this.productsService.update(product.id, {title: 'change'}))
+    )
+    .subscribe(data => {
+      console.log(data)
+    });
+    this.productsService.fetchReadAndUpdate(id, {title: 'change'})
+    .subscribe(response => {
+      const read = response[0];
+      const update = response[1];
     })
   }
 

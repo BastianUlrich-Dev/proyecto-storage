@@ -5,9 +5,8 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 })
 export class HighlightDirective {
 
-  @HostListener('mouseenter') onMouseEnter(){
-    this.element.nativeElement.style.backgroundColor = 'red';
-  }
+  
+  
   @HostListener('mouseleave') onMouseleave(){
     this.element.nativeElement.style.backgroundColor = '';
   }
